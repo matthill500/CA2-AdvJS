@@ -8,6 +8,10 @@ import Button from 'react-bootstrap/Button';
 
 class Filters extends Component {
   render(){
+    const categories = this.props.categories;
+    const onCategoryChange = this.props.onCategoryChange;
+    const onAuthorChange = this.props.onAuthorChange;
+
     return (
       <Accordion className="mt-2">
         <Card>
@@ -25,12 +29,15 @@ class Filters extends Component {
                         Categories
                       </Form.Label>
                       <Col sm={10}>
-                        <Form.Check type="radio" name="category" value="Swimming" label="Swimming" />
-                        <Form.Check type="radio" name="category" value="Kayaking" label="Kayaking" />
-                        <Form.Check type="radio" name="category" value="Running" label="Running" />
-                        <Form.Check type="radio" name="category" value="Cycling" label="Cycling" />
-                        <Form.Check type="radio" name="category" value="Walking" label="Walking" />
-                        <Form.Check type="radio" name="category" value="Karate" label="Karate" />
+                        {categories.map(category => (
+                            <Form.Check 
+                            onChange={onCategoryChange}
+                            key={category.id} 
+                            type="radio" 
+                            name="category" 
+                            value={category.id} 
+                            label={category.title} />
+                        ))  }
                       </Col>
                     </Form.Group>
                   </fieldset>
@@ -39,7 +46,10 @@ class Filters extends Component {
                       Author
                     </Form.Label>
                     <Col sm={10}>
-                      <Form.Control type="text" placeholder="Author" />
+                      <Form.Control 
+                      onChange={onAuthorChange}
+                      type="text" 
+                      placeholder="Author" />
                     </Col>
                   </Form.Group>
                   <Form.Group as={Row}>
