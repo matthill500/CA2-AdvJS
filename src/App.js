@@ -8,7 +8,6 @@ import {
 } from "react-router-dom";
 
 import Navigation from './Navigation';
-import Articles from './Articles';
 import { Container } from 'react-bootstrap';
 import Login from './Login';
 import Register from './Register';
@@ -73,7 +72,7 @@ class App extends Component {
     this.props.history.push('/home');
   }
 
-  onLogoutSuccess(msg){
+  onLogoutSuccess(){
     this.setState({
       user: null
     });
@@ -90,13 +89,17 @@ class App extends Component {
       },
     })
     .then(
-      () => {
-        let articles = this.state.articles;
-        const articleId = articles.findIndex(article => article.id === id)
-        articles.splice(articleId, 1);
-        this.setState({
-           articles
-         });
+      (result) => {
+        if(result.ok){
+          let articles = this.state.articles;
+          const articleId = articles.findIndex(article => article.id === id)
+          articles.splice(articleId, 1);
+          this.setState({
+             articles
+           });
+        }else{
+          console.log("not your article!!");
+        }
       },
       (error) => {
         console.log(error);
@@ -157,7 +160,6 @@ class App extends Component {
               />
             )}/>
             
-
           <Route exact path="/create">
               <CreateArticle
                 onSuccessCreate={this.onCreateArticleSuccess}
