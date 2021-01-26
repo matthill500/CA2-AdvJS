@@ -35,7 +35,7 @@ class Navigation extends Component {
     const user = this.props.user;
     return (
         <Navbar bg="light" expand="lg">
-          <Navbar.Brand as={Link} to="/" href="#">React Bootstrap</Navbar.Brand>
+          <Navbar.Brand as={Link} to="/home" href="#">Articles</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             {user === null &&
@@ -46,9 +46,10 @@ class Navigation extends Component {
             <Nav.Item>
               <Nav.Link as={Link} to="/register" href="#">Register</Nav.Link>
             </Nav.Item>}
+            
             {user !== null &&
             <Nav.Item>
-              <Nav.Link as={Link} to="/home" href="#">Home</Nav.Link>
+              <Nav.Link as={Link} to="/create" href="#">Create Article</Nav.Link>
             </Nav.Item>}
             {user !== null &&
             <Nav.Item className="ml-auto">

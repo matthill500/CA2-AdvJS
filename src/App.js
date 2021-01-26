@@ -12,6 +12,10 @@ import Articles from './Articles';
 import { Container } from 'react-bootstrap';
 import Login from './Login';
 import Register from './Register';
+import CreateArticle from './CreateArticle';
+import EditArticle from './EditArticle';
+import ViewArticle from './ViewArticle';
+import Home from './Home';
 
 class App extends Component {
   REST_API = "http://localhost:8000/api";
@@ -26,6 +30,7 @@ class App extends Component {
     };
     this.onLoginSuccess = this.onLoginSuccess.bind(this);
     this.onLogoutSuccess = this.onLogoutSuccess.bind(this);
+    this.onCreateArticleSuccess = this.onCreateArticleSuccess.bind(this);
   }
   componentDidMount(){
     fetch(this.REST_API + "/articles")
@@ -74,19 +79,57 @@ class App extends Component {
     });
       localStorage.removeItem('user');
   }
-  
+
+  deleteArticle = (id) => {
+    fetch(this.REST_API + "/articles/" + id,{
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ' + this.state.user.api_token
+      },
+    })
+    .then(
+      () => {
+        let articles = this.state.articles;
+        const articleId = articles.findIndex(article => article.id === id)
+        articles.splice(articleId, 1);
+        this.setState({
+           articles
+         });
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
+  onCreateArticleSuccess = (article) =>{
+    let articles = this.state.articles;
+    articles.push(article);
+    this.setState({ 
+      articles
+    })
+    console.log(articles);
+    this.props.history.push('/home');
+  }
+
+  onEditArticleSuccess = (article) =>{
+    let articles = this.state.articles;
+    console.log("hello");
+    const articleIdx = articles.findIndex(art => art.id === article.id)
+    articles.splice(articleIdx, 1, article);
+    this.setState({ 
+      articles
+    })
+    this.props.history.push('/home');
+  }
   
   render(){
     return (
       <Container>
         <Navigation onLogoutSuccess={this.onLogoutSuccess} user={this.state.user} />
         <Switch>
-          <Route exact path="/">
-              <Articles 
-                      articles={this.state.articles} 
-                      categories={this.state.categories}
-              />
-          </Route>
           
           <Route exact path="/login">
               <Login onLoginSuccess={this.onLoginSuccess} />
@@ -97,21 +140,42 @@ class App extends Component {
           </Route>
 
           <Route exact path="/home">
-              <Home />
+              <Home 
+                user={this.state.user}
+                articles={this.state.articles} 
+                categories={this.state.categories}
+                deleteArticle={this.deleteArticle}
+              />
           </Route>
+
+          <Route exact path="/EditArticle/:id" 
+            render={props => (
+              <EditArticle {...props} 
+              categories={this.state.categories}
+              user={this.state.user}
+              onSuccessEdit={this.onEditArticleSuccess}
+              />
+            )}/>
+            
+
+          <Route exact path="/create">
+              <CreateArticle
+                onSuccessCreate={this.onCreateArticleSuccess}
+                categories={this.state.categories}
+                user={this.state.user}
+              />
+          </Route>
+
+          <Route exact path="/ViewArticle/:id"
+          render={props => (
+              <ViewArticle {...props} 
+              />
+            )}/>
         </Switch>
       </Container>
     );
   }
 }
 
-
-function Home(){
-  return(
-    <div>
-      <h2>Home</h2>
-    </div>
-  );
-}
 
 export default withRouter(App);

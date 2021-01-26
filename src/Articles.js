@@ -25,16 +25,18 @@ class Articles extends Component {
       selectedAuthor: author
     });
   }
-
+  
   render(){
     return (
       <div>
-        <Filters 
+          <Filters 
                       categories={this.props.categories} 
                       onCategoryChange={this.onCategoryChange}
                       onAuthorChange={this.onAuthorChange}
           />
-          <ArticleList articles={this.props.articles} 
+          <ArticleList onDeleteArticle={(id) => this.props.deleteArticle(id)}
+                       user={this.props.user}
+                       articles={this.props.articles} 
                        selectedCategory={this.state.selectedCategory}
                        selectedAuthor={this.state.selectedAuthor} 
           />

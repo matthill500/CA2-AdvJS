@@ -44,7 +44,7 @@ class Login extends Component {
     .then(
       (result) => {
         const user = result.data;
-        this.props.onSuccess(user, this.state.remember);
+        this.props.onLoginSuccess(user, this.state.remember);
       },
       (error) => {
         console.log(error);
